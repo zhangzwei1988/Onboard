@@ -400,6 +400,16 @@
     }
     .tts-toggle:hover { background: rgba(0,0,0,0.7); transform: scale(1.1); }
     .tts-toggle.muted { opacity: 0.5; }
+    .auto-toggle {
+      position: absolute; top: 12px; right: 56px;
+      width: 36px; height: 36px;
+      background: rgba(0,0,0,0.5); backdrop-filter: blur(6px);
+      border: none; border-radius: 50%; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; z-index: 150; transition: all 0.2s;
+    }
+    .auto-toggle:hover { background: rgba(0,0,0,0.7); transform: scale(1.1); }
+    .auto-toggle.playing { background: rgba(0,0,0,0.5); }
   </style>
 </head>
 <body>
@@ -451,8 +461,9 @@
       <div class="floating-sparkle">✨</div>
       <div class="floating-sparkle">✨</div>
       <div class="narration show">
-        他翻开《万物之书》，发现还有好多好多空白的页。<br>
-        他去过那么多远方……却从没认真听过<span class="highlight">家门口那只蝴蝶</span>在说什么。
+        可是，爷爷慢慢老了，走不动了。<br>
+        他翻开《万物之书》，发现还有好多好多<span class="highlight">空白的页</span>。<br>
+        那些没来得及听到的声音，成了爷爷最大的遗憾。
       </div>
       <div class="progress-bar"><div class="progress-fill" style="width:45%"></div></div>
     </div>
@@ -562,6 +573,7 @@
 
     <!-- TTS 朗读开关 -->
     <button class="tts-toggle" id="tts-toggle" onclick="toggleTTS()" title="朗读开关">🔊</button>
+    <button class="auto-toggle playing" id="auto-toggle" onclick="toggleAutoPlay()" title="自动翻页">▶️</button>
 
     <!-- 点击启动层（浏览器需要用户交互才能播音频） -->
     <div id="start-overlay" style="
@@ -584,24 +596,24 @@
   </div>
 
   <div class="controls-row">
-    <button class="ctrl-btn active" onclick="goScene(1)" id="btn-s1"><span class="icon">🌱</span> 发现</button>
-    <button class="ctrl-btn" onclick="goScene(2)" id="btn-s2"><span class="icon">🌍</span> 旅程</button>
-    <button class="ctrl-btn" onclick="goScene(3)" id="btn-s3"><span class="icon">📖</span> 遗憾</button>
-    <button class="ctrl-btn" onclick="goScene(4)" id="btn-s4"><span class="icon">✉️</span> 交给你</button>
+    <button class="ctrl-btn active" onclick="goScene(1,false)" id="btn-s1"><span class="icon">🌱</span> 发现</button>
+    <button class="ctrl-btn" onclick="goScene(2,false)" id="btn-s2"><span class="icon">🌍</span> 旅程</button>
+    <button class="ctrl-btn" onclick="goScene(3,false)" id="btn-s3"><span class="icon">📖</span> 遗憾</button>
+    <button class="ctrl-btn" onclick="goScene(4,false)" id="btn-s4"><span class="icon">✉️</span> 交给你</button>
     <div class="ctrl-divider"></div>
-    <button class="ctrl-btn" onclick="goScene(5)" id="btn-s5"><span class="icon">🦉</span> 咕咕</button>
-    <button class="ctrl-btn" onclick="goScene(6)" id="btn-s6"><span class="icon">📸</span> 快门</button>
-    <button class="ctrl-btn" onclick="goScene(7)" id="btn-s7"><span class="icon">🌟</span> 任务</button>
+    <button class="ctrl-btn" onclick="goScene(5,false)" id="btn-s5"><span class="icon">🦉</span> 咕咕</button>
+    <button class="ctrl-btn" onclick="goScene(6,false)" id="btn-s6"><span class="icon">📸</span> 快门</button>
+    <button class="ctrl-btn" onclick="goScene(7,false)" id="btn-s7"><span class="icon">🌟</span> 任务</button>
     <div class="ctrl-divider"></div>
-    <button class="ctrl-btn" onclick="goScene('triggers')" id="btn-triggers"><span class="icon">📋</span> 场景触发</button>
+    <button class="ctrl-btn" onclick="goScene('triggers',false)" id="btn-triggers"><span class="icon">📋</span> 场景触发</button>
   </div>
 </div>
 
 <script>
 let currentScene = 1, journeyTimer = null, journeyIdx = 0;
-let ttsEnabled = true;
+let ttsEnabled = true, autoPlay = true;
 let currentAudio = null;
-let audioAvailable = null; // null=未检测, true/false
+let autoTimer = null;
 
 // ===== 音频文件映射 =====
 const audioFiles = {
@@ -615,67 +627,25 @@ const audioFiles = {
   't10': 'audio/trigger10.mp3'
 };
 
-// fallback 纯文本（Web Speech API 用）
-const fallbackTexts = {
-  1: '亚瑟爷爷是一位博物学家。小时候，他发现了一个秘密——大自然里的每一种生物，都在悄悄说话。爷爷把这些神奇的声音叫做「自然之语」。',
-  '2a': '他去过会下雨的森林，听过大象的脚步声。',
-  '2b': '他爬过冰冷的雪山，听过企鹅爸爸的呼唤。',
-  '2c': '他还坐船出海，听过鲸鱼在水下唱歌。',
-  3: '他翻开《万物之书》，发现还有好多好多空白的页。他去过那么多远方……却从没认真听过家门口那只蝴蝶在说什么。',
-  4: '亲爱的小探险家：帮爷爷把书填满吧！去听听你家门口的花、树、小虫子都在说什么？等你发现了新的声音，记得回来讲给爷爷听哦！——爱你的，亚瑟爷爷',
-  5: '咕咕！你就是爷爷说的小探险家吧？我等你好久啦！我是咕咕，以后有问题都可以问我！来，我教你收集自然之语！',
-  6: '看到那朵花了吗？它正在说话呢！按下红色按钮，就能收集到它的声音。',
-  '6done': '咕咕！你听到了吗！这些小星星，就是花的自然之语。收集越多，爷爷的书就越丰富哦！',
-  7: '爷爷的第一个任务：到外面去，拍一张照片吧！花、虫子、树叶、云朵——什么都可以！你家门口藏着什么声音呢？咕咕好期待！'
-};
-const triggerPlain = {
-  1: '咕咕！拍得不错～想知道这是什么吗？按紫色按钮问我！',
-  2: '对了！你也可以按住黄色按钮直接跟我说话～就像对讲机一样！',
-  3: '咕咕！你已经收集了10段自然之语！爷爷的书又丰富了一点～继续加油！',
-  4: '这就是爷爷的《万物之书》！你收集到的每一种生物，都会记录在这里～看，这是你发现的！点开看看？',
-  5: '这里是探险任务！爷爷给你准备了一些小挑战，完成就能获得更多星星哦～',
-  6: '欢迎来到魔法工坊！在这里，你可以把自然之语变成一幅画～选一张照片，试试看？',
-  7: '这是你的探险背包！照片、创作、故事……你的宝贝都收在这里啦～',
-  8: '咕咕咕咕！！这是你第一次听到「凤蝶」的声音！它已经被写进爷爷的书里啦～',
-  9: '哇！你获得了一枚探险家徽章！这是爷爷给厉害的探险家准备的荣誉勋章～去背包里看看你的徽章吧！',
-  10: '咕咕！你升级啦！你现在是Lv2好奇宝贝了～收集越多自然之语，就能听懂越多大自然的秘密哦！'
-};
+// 自动翻页流程：音频播完 → 等间隔 → 下一步
+const AUTO_GAP = 1200;       // 幕间间隔
+const ACT1_GAP = 200;        // 第一幕内场景(3→4→5)紧凑衔接
 
-// ===== 播放逻辑 =====
+// ===== 播放逻辑（仅mp3） =====
 function stopAudio() {
   if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; currentAudio = null; }
-  window.speechSynthesis.cancel();
+  clearTimeout(autoTimer);
 }
 
-function speak(key) {
+function speak(key, onEnd) {
   stopAudio();
-  if (!ttsEnabled || !key) return;
-
+  if (!ttsEnabled || !key) { if (onEnd) onEnd(); return; }
   const file = audioFiles[key];
-  if (file) {
-    const audio = new Audio(file);
-    currentAudio = audio;
-    audio.play().catch(() => {
-      // mp3加载失败 → fallback到 Web Speech API
-      if (audioAvailable === null) audioAvailable = false;
-      speakFallback(key);
-    });
-    audio.onplay = () => { if (audioAvailable === null) audioAvailable = true; };
-  } else {
-    speakFallback(key);
-  }
-}
-
-function speakFallback(key) {
-  const text = fallbackTexts[key] || triggerPlain[key] || '';
-  if (!text) return;
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'zh-CN'; u.rate = 0.9; u.pitch = 1.15;
-  const voices = window.speechSynthesis.getVoices();
-  const v = voices.find(v => v.lang.startsWith('zh') && v.name.includes('Female'))
-    || voices.find(v => v.lang.startsWith('zh')) || null;
-  if (v) u.voice = v;
-  window.speechSynthesis.speak(u);
+  if (!file) { if (onEnd) onEnd(); return; }
+  const audio = new Audio(file);
+  currentAudio = audio;
+  if (onEnd) audio.onended = onEnd;
+  audio.play().catch(() => { if (onEnd) onEnd(); });
 }
 
 function toggleTTS() {
@@ -684,21 +654,84 @@ function toggleTTS() {
   btn.textContent = ttsEnabled ? '🔊' : '🔇';
   btn.classList.toggle('muted', !ttsEnabled);
   if (!ttsEnabled) stopAudio();
-  else speakCurrentScene();
 }
 
-function speakCurrentScene() {
-  if (currentScene === 2) {
-    speak(['2a','2b','2c'][journeyIdx]);
-  } else {
-    speak(currentScene);
-  }
+function toggleAutoPlay() {
+  autoPlay = !autoPlay;
+  const btn = document.getElementById('auto-toggle');
+  btn.textContent = autoPlay ? '▶️' : '⏸️';
+  btn.classList.toggle('playing', autoPlay);
+  // 如果重新开启，从当前场景继续
+  if (autoPlay) autoFromCurrent();
+}
+
+// ===== 自动播放调度 =====
+function autoNext(nextFn, gap) {
+  if (!autoPlay) return;
+  autoTimer = setTimeout(nextFn, gap || AUTO_GAP);
+}
+
+function autoFromCurrent() {
+  if (!autoPlay) return;
+  if (currentScene === 1) playScene1();
+  else if (currentScene === 2) playScene2();
+  else if (currentScene >= 3 && currentScene <= 5) speakAndNext(currentScene);
+  else if (currentScene === 6) playScene6();
+  else if (currentScene === 7) speak(7);
+}
+
+function playScene1() {
+  speak(1, () => autoNext(() => goSceneAuto(2)));
+}
+
+function playScene2() {
+  const p = document.getElementById('journey-panels');
+  journeyIdx = 0;
+  p.style.transform = 'translateX(0)';
+  speak('2a', () => {
+    autoNext(() => {
+      journeyIdx = 1;
+      p.style.transform = 'translateX(-800px)';
+      speak('2b', () => {
+        autoNext(() => {
+          journeyIdx = 2;
+          p.style.transform = 'translateX(-1600px)';
+          speak('2c', () => autoNext(() => goSceneAuto(3), ACT1_GAP));
+        });
+      });
+    });
+  });
+}
+
+function speakAndNext(sceneId) {
+  const nextId = sceneId + 1;
+  // 第一幕内(3→4)紧凑衔接，幕间(4→5, 5→6)正常间隔
+  const gap = (sceneId === 3) ? ACT1_GAP : AUTO_GAP;
+  speak(sceneId, () => autoNext(() => goSceneAuto(nextId), gap));
+}
+
+function playScene6() {
+  speak(6, () => {
+    if (!autoPlay) return;
+    // 自动按快门
+    autoTimer = setTimeout(() => {
+      takePhoto();
+      // 6done播完后自动跳7
+    }, 1500);
+  });
 }
 
 // ===== 场景切换 =====
-function goScene(id) {
+function goSceneAuto(id) {
+  goScene(id, true);
+}
+
+function goScene(id, isAuto) {
   clearJourneyAnim();
   stopAudio();
+  // 手动点击时中断自动播放序列
+  if (!isAuto) { /* 手动点不影响autoPlay状态，只中断当前定时 */ }
+
   document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.ctrl-btn').forEach(b => b.classList.remove('active'));
   const el = id === 'triggers' ? document.getElementById('scene-triggers') : document.getElementById('scene-' + id);
@@ -706,15 +739,37 @@ function goScene(id) {
   const btn = id === 'triggers' ? document.getElementById('btn-triggers') : document.getElementById('btn-s' + id);
   if (btn) btn.classList.add('active');
   currentScene = id;
-  if (id === 2) { journeyIdx = 0; startJourneyAnim(); }
+
   if (id === 4) initHandover();
   if (id === 5) initGugu();
   if (id === 6) resetShutter();
   if (id === 7) initFirstTask();
-  if (id !== 'triggers') setTimeout(speakCurrentScene, 400);
+
+  // 启动播放
+  if (id === 'triggers') return;
+  setTimeout(() => {
+    if (autoPlay && isAuto) {
+      // 自动模式：走自动流程
+      if (id === 1) playScene1();
+      else if (id === 2) playScene2();
+      else if (id >= 3 && id <= 5) speakAndNext(id);
+      else if (id === 6) playScene6();
+      else if (id === 7) speak(7); // 最后一页，不再跳
+    } else {
+      // 手动点击：只播当前音频，若autoPlay开着则接自动
+      if (id === 2) {
+        if (autoPlay) playScene2();
+        else startJourneyManual();
+      } else if (autoPlay) {
+        autoFromCurrent();
+      } else {
+        speak(id);
+      }
+    }
+  }, 400);
 }
 
-function startJourneyAnim() {
+function startJourneyManual() {
   const p = document.getElementById('journey-panels');
   journeyIdx = 0;
   speak('2a');
@@ -724,6 +779,7 @@ function startJourneyAnim() {
     speak(['2a','2b','2c'][journeyIdx]);
   }, 4500);
 }
+
 function clearJourneyAnim() {
   if (journeyTimer) { clearInterval(journeyTimer); journeyTimer = null; }
   const p = document.getElementById('journey-panels'); if (p) p.style.transform = 'translateX(0)';
@@ -752,7 +808,9 @@ function takePhoto() {
   setTimeout(() => {
     document.getElementById('gugu-shutter-bubble').innerHTML =
       '咕咕！你听到了吗！<br>这些小星星，就是花的<span class="highlight">自然之语</span>～<br>收集越多，爷爷的书就越丰富哦！';
-    speak('6done');
+    speak('6done', () => {
+      if (autoPlay) autoNext(() => goSceneAuto(7));
+    });
   }, 1000);
   document.querySelector('.finger-hint').style.display = 'none';
   document.getElementById('shutter-btn').style.animation = 'none';
@@ -802,12 +860,10 @@ function showTriggerDemo(n) {
   triggerToastTimer = setTimeout(() => toast.classList.remove('show'), 5000);
 }
 
-// 预加载语音
-window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-
 function startExperience() {
   document.getElementById('start-overlay').style.display = 'none';
-  speakCurrentScene();
+  if (autoPlay) playScene1();
+  else speak(1);
 }
 </script>
 </body>
