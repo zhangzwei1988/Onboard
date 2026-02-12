@@ -101,7 +101,10 @@
     .panel-glacier { background-image: url('bg/scene2b.png'); }
     .panel-ocean { background-image: url('bg/scene2c.png'); }
 
-    /* ===== 场景3：爷爷的遗憾 ===== */
+    /* ===== 场景3：万物之书 ===== */
+    .scene-book { background-image: url('bg/book.png'); }
+
+    /* ===== 场景4：爷爷的遗憾 ===== */
     .scene-regret { background-image: url('bg/scene3.png'); }
     .floating-sparkle {
       position: absolute; font-size: 14px; opacity: 0;
@@ -115,7 +118,7 @@
       50% { opacity: 0.8; transform: translateY(-10px) scale(1); }
     }
 
-    /* ===== 场景4：交给你 ===== */
+    /* ===== 场景5：交给你 ===== */
     .scene-handover { background-image: url('bg/scene4.png'); }
     .letter-card {
       position: absolute; bottom: 50px; left: 50%;
@@ -153,7 +156,7 @@
       50% { opacity: 1; transform: translateY(-12px) scale(1.2); }
     }
 
-    /* ===== 场景5：咕咕登场 ===== */
+    /* ===== 场景6：咕咕登场 ===== */
     .scene-gugu { background-image: url('bg/scene5.png'); }
     .gugu-eyes {
       position: absolute; top: 32%; left: 50%;
@@ -202,7 +205,7 @@
       100% { opacity: 0; transform: translateY(100px) rotate(200deg) translateX(40px); }
     }
 
-    /* ===== 场景6：快门键教学 ===== */
+    /* ===== 场景7：快门键教学 ===== */
     .scene-shutter { background-image: url('bg/scene6.png'); }
     .viewfinder-frame {
       position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%);
@@ -275,7 +278,7 @@
     .gugu-mini-bubble.show { opacity: 1; transform: translateX(0); }
     .gugu-mini-bubble .highlight { color: #FFD700; font-weight: 700; }
 
-    /* ===== 场景7：第一个任务 ===== */
+    /* ===== 场景8：第一个任务 ===== */
     .scene-first-task { background-image: url('bg/scene7.png'); }
     .task-card-container {
       position: absolute; top: 50%; left: 50%;
@@ -451,12 +454,24 @@
           <div class="narration show" style="opacity:1">他还坐船出海，听过<span class="highlight">鲸鱼在水下唱歌</span></div>
         </div>
       </div>
-      <div class="progress-bar"><div class="progress-fill" style="width:30%"></div></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:22%"></div></div>
     </div>
 
-    <!-- 场景3：爷爷的遗憾 -->
-    <div class="scene scene-regret" id="scene-3">
+    <!-- 场景3：万物之书 -->
+    <div class="scene scene-book" id="scene-3">
       <div class="act-label"><span class="act-dot"></span>第一幕 · 场景3<span class="act-time">15s</span></div>
+      <div class="narration show">
+        爷爷走过森林、雪山和大海，<br>
+        把一路上听到的声音、遇见的生物，都记录在一本特别的书里——<br>
+        爷爷给它取了一个名字，叫<span class="highlight">《万物之书》</span>。<br>
+        爷爷一辈子的发现，都藏在这本书里。
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:33%"></div></div>
+    </div>
+
+    <!-- 场景4：爷爷的遗憾 -->
+    <div class="scene scene-regret" id="scene-4">
+      <div class="act-label"><span class="act-dot"></span>第一幕 · 场景4<span class="act-time">15s</span></div>
       <div class="floating-sparkle">✨</div>
       <div class="floating-sparkle">✨</div>
       <div class="floating-sparkle">✨</div>
@@ -465,12 +480,12 @@
         他翻开《万物之书》，发现还有好多好多<span class="highlight">空白的页</span>。<br>
         那些没来得及听到的声音，成了爷爷最大的遗憾。
       </div>
-      <div class="progress-bar"><div class="progress-fill" style="width:45%"></div></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:44%"></div></div>
     </div>
 
-    <!-- 场景4：交给你 -->
-    <div class="scene scene-handover" id="scene-4">
-      <div class="act-label"><span class="act-dot"></span>第一幕 · 场景4<span class="act-time">15s</span></div>
+    <!-- 场景5：交给你 -->
+    <div class="scene scene-handover" id="scene-5">
+      <div class="act-label"><span class="act-dot"></span>第一幕 · 场景5<span class="act-time">15s</span></div>
       <div class="sparkle-anim">✨</div>
       <div class="sparkle-anim">✨</div>
       <div class="sparkle-anim">✨</div>
@@ -487,8 +502,8 @@
       <div class="progress-bar"><div class="progress-fill" style="width:55%"></div></div>
     </div>
 
-    <!-- 场景5：咕咕登场 -->
-    <div class="scene scene-gugu" id="scene-5">
+    <!-- 场景6：咕咕登场 -->
+    <div class="scene scene-gugu" id="scene-6">
       <div class="act-label"><span class="act-dot"></span>第二幕 · 咕咕登场<span class="act-time">15s</span></div>
       <div class="gugu-eyes" id="gugu-eyes">
         <div class="gugu-eye"></div>
@@ -498,16 +513,16 @@
         <div class="gugu-avatar-big" id="gugu-avatar">🦉</div>
         <div class="gugu-name-tag" id="gugu-name">咕咕</div>
       </div>
-      <div class="narration" id="narration-5">
+      <div class="narration" id="narration-6">
         咕咕！你就是爷爷说的小探险家吧？我等你好久啦！<br>
         我是咕咕～以后有问题都可以问我！<br>
         来，<span class="highlight">我教你收集自然之语！</span>
       </div>
-      <div class="progress-bar"><div class="progress-fill" style="width:70%"></div></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:66%"></div></div>
     </div>
 
-    <!-- 场景6：快门键教学 -->
-    <div class="scene scene-shutter" id="scene-6">
+    <!-- 场景7：快门键教学 -->
+    <div class="scene scene-shutter" id="scene-7">
       <div class="act-label"><span class="act-dot"></span>第三幕 · 快门键教学<span class="act-time">20s</span></div>
       <div class="viewfinder-frame">
         <div class="vf-corner tl"></div>
@@ -531,11 +546,11 @@
         <div class="flying-star">⭐</div>
       </div>
       <div class="flash-overlay" id="flash-overlay"></div>
-      <div class="progress-bar"><div class="progress-fill" style="width:85%"></div></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:83%"></div></div>
     </div>
 
-    <!-- 场景7：第一个任务 -->
-    <div class="scene scene-first-task" id="scene-7">
+    <!-- 场景8：第一个任务 -->
+    <div class="scene scene-first-task" id="scene-8">
       <div class="act-label"><span class="act-dot"></span>第四幕 · 第一个任务<span class="act-time">15s</span></div>
       <div class="task-card-container">
         <div class="gugu-task-avatar">🦉</div>
@@ -598,12 +613,13 @@
   <div class="controls-row">
     <button class="ctrl-btn active" onclick="goScene(1,false)" id="btn-s1"><span class="icon">🌱</span> 发现</button>
     <button class="ctrl-btn" onclick="goScene(2,false)" id="btn-s2"><span class="icon">🌍</span> 旅程</button>
-    <button class="ctrl-btn" onclick="goScene(3,false)" id="btn-s3"><span class="icon">📖</span> 遗憾</button>
-    <button class="ctrl-btn" onclick="goScene(4,false)" id="btn-s4"><span class="icon">✉️</span> 交给你</button>
+    <button class="ctrl-btn" onclick="goScene(3,false)" id="btn-s3"><span class="icon">📖</span> 万物之书</button>
+    <button class="ctrl-btn" onclick="goScene(4,false)" id="btn-s4"><span class="icon">😢</span> 遗憾</button>
+    <button class="ctrl-btn" onclick="goScene(5,false)" id="btn-s5"><span class="icon">✉️</span> 交给你</button>
     <div class="ctrl-divider"></div>
-    <button class="ctrl-btn" onclick="goScene(5,false)" id="btn-s5"><span class="icon">🦉</span> 咕咕</button>
-    <button class="ctrl-btn" onclick="goScene(6,false)" id="btn-s6"><span class="icon">📸</span> 快门</button>
-    <button class="ctrl-btn" onclick="goScene(7,false)" id="btn-s7"><span class="icon">🌟</span> 任务</button>
+    <button class="ctrl-btn" onclick="goScene(6,false)" id="btn-s6"><span class="icon">🦉</span> 咕咕</button>
+    <button class="ctrl-btn" onclick="goScene(7,false)" id="btn-s7"><span class="icon">📸</span> 快门</button>
+    <button class="ctrl-btn" onclick="goScene(8,false)" id="btn-s8"><span class="icon">🌟</span> 任务</button>
     <div class="ctrl-divider"></div>
     <button class="ctrl-btn" onclick="goScene('triggers',false)" id="btn-triggers"><span class="icon">📋</span> 场景触发</button>
   </div>
@@ -619,19 +635,20 @@ let autoTimer = null;
 const audioFiles = {
   1: 'audio/scene1.mp3',
   '2a': 'audio/scene2a.mp3', '2b': 'audio/scene2b.mp3', '2c': 'audio/scene2c.mp3',
-  3: 'audio/scene3.mp3', 4: 'audio/scene4.mp3', 5: 'audio/scene5.mp3',
-  6: 'audio/scene6.mp3', '6done': 'audio/scene6done.mp3', 7: 'audio/scene7.mp3',
+  3: 'audio/scene3book.mp3', 4: 'audio/scene4.mp3',
+  5: 'audio/scene5.mp3', 6: 'audio/scene6.mp3',
+  7: 'audio/scene7.mp3', '7done': 'audio/scene7done.mp3',
+  8: 'audio/scene8.mp3',
   't1': 'audio/trigger1.mp3', 't2': 'audio/trigger2.mp3', 't3': 'audio/trigger3.mp3',
   't4': 'audio/trigger4.mp3', 't5': 'audio/trigger5.mp3', 't6': 'audio/trigger6.mp3',
   't7': 'audio/trigger7.mp3', 't8': 'audio/trigger8.mp3', 't9': 'audio/trigger9.mp3',
   't10': 'audio/trigger10.mp3'
 };
 
-// 自动翻页流程：音频播完 → 等间隔 → 下一步
-const AUTO_GAP = 1200;       // 幕间间隔
-const ACT1_GAP = 200;        // 第一幕内场景(3→4→5)紧凑衔接
+const AUTO_GAP = 1200;
+const ACT1_GAP = 200;   // 第一幕内紧凑衔接(2c→3, 3→4, 4→5)
 
-// ===== 播放逻辑（仅mp3） =====
+// ===== 播放逻辑 =====
 function stopAudio() {
   if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; currentAudio = null; }
   clearTimeout(autoTimer);
@@ -661,7 +678,6 @@ function toggleAutoPlay() {
   const btn = document.getElementById('auto-toggle');
   btn.textContent = autoPlay ? '▶️' : '⏸️';
   btn.classList.toggle('playing', autoPlay);
-  // 如果重新开启，从当前场景继续
   if (autoPlay) autoFromCurrent();
 }
 
@@ -675,9 +691,9 @@ function autoFromCurrent() {
   if (!autoPlay) return;
   if (currentScene === 1) playScene1();
   else if (currentScene === 2) playScene2();
-  else if (currentScene >= 3 && currentScene <= 5) speakAndNext(currentScene);
-  else if (currentScene === 6) playScene6();
-  else if (currentScene === 7) speak(7);
+  else if (currentScene >= 3 && currentScene <= 6) speakAndNext(currentScene);
+  else if (currentScene === 7) playScene7();
+  else if (currentScene === 8) speak(8);
 }
 
 function playScene1() {
@@ -705,32 +721,26 @@ function playScene2() {
 
 function speakAndNext(sceneId) {
   const nextId = sceneId + 1;
-  // 第一幕内(3→4)紧凑衔接，幕间(4→5, 5→6)正常间隔
-  const gap = (sceneId === 3) ? ACT1_GAP : AUTO_GAP;
+  // 第一幕内(3→4→5)紧凑衔接，幕间(5→6, 6→7, 7→8)正常间隔
+  const gap = (sceneId >= 3 && sceneId <= 4) ? ACT1_GAP : AUTO_GAP;
   speak(sceneId, () => autoNext(() => goSceneAuto(nextId), gap));
 }
 
-function playScene6() {
-  speak(6, () => {
+function playScene7() {
+  speak(7, () => {
     if (!autoPlay) return;
-    // 自动按快门
     autoTimer = setTimeout(() => {
       takePhoto();
-      // 6done播完后自动跳7
     }, 1500);
   });
 }
 
 // ===== 场景切换 =====
-function goSceneAuto(id) {
-  goScene(id, true);
-}
+function goSceneAuto(id) { goScene(id, true); }
 
 function goScene(id, isAuto) {
   clearJourneyAnim();
   stopAudio();
-  // 手动点击时中断自动播放序列
-  if (!isAuto) { /* 手动点不影响autoPlay状态，只中断当前定时 */ }
 
   document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.ctrl-btn').forEach(b => b.classList.remove('active'));
@@ -740,23 +750,20 @@ function goScene(id, isAuto) {
   if (btn) btn.classList.add('active');
   currentScene = id;
 
-  if (id === 4) initHandover();
-  if (id === 5) initGugu();
-  if (id === 6) resetShutter();
-  if (id === 7) initFirstTask();
+  if (id === 5) initHandover();
+  if (id === 6) initGugu();
+  if (id === 7) resetShutter();
+  if (id === 8) initFirstTask();
 
-  // 启动播放
   if (id === 'triggers') return;
   setTimeout(() => {
     if (autoPlay && isAuto) {
-      // 自动模式：走自动流程
       if (id === 1) playScene1();
       else if (id === 2) playScene2();
-      else if (id >= 3 && id <= 5) speakAndNext(id);
-      else if (id === 6) playScene6();
-      else if (id === 7) speak(7); // 最后一页，不再跳
+      else if (id >= 3 && id <= 6) speakAndNext(id);
+      else if (id === 7) playScene7();
+      else if (id === 8) speak(8);
     } else {
-      // 手动点击：只播当前音频，若autoPlay开着则接自动
       if (id === 2) {
         if (autoPlay) playScene2();
         else startJourneyManual();
@@ -792,7 +799,7 @@ function initHandover() {
 
 function initGugu() {
   const eyes = document.getElementById('gugu-eyes'), av = document.getElementById('gugu-avatar'),
-        nm = document.getElementById('gugu-name'), nr = document.getElementById('narration-5');
+        nm = document.getElementById('gugu-name'), nr = document.getElementById('narration-6');
   eyes.style.display = 'flex'; av.classList.remove('landed','bounce'); nm.classList.remove('show'); nr.classList.remove('show');
   setTimeout(() => { eyes.style.display = 'none'; av.classList.add('landed'); }, 1500);
   setTimeout(() => { av.classList.add('bounce'); nm.classList.add('show'); }, 2200);
@@ -808,8 +815,8 @@ function takePhoto() {
   setTimeout(() => {
     document.getElementById('gugu-shutter-bubble').innerHTML =
       '咕咕！你听到了吗！<br>这些小星星，就是花的<span class="highlight">自然之语</span>～<br>收集越多，爷爷的书就越丰富哦！';
-    speak('6done', () => {
-      if (autoPlay) autoNext(() => goSceneAuto(7));
+    speak('7done', () => {
+      if (autoPlay) autoNext(() => goSceneAuto(8));
     });
   }, 1000);
   document.querySelector('.finger-hint').style.display = 'none';
